@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+  <head>
+		
+		<!-- Webpage Title -->
+    <title>키워드로 크롤링하기</title>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+		
+		<!-- JS -->		
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    
+    <script>
+
+      function show_layer(div_name){
+       document.all.div_01.style.display="none";
+       document.all.div_02.style.display="none";
+       document.all.div_03.style.display="none";
+       document.all.div_04.style.display="none"; // 메뉴 숫자에 따라 늘려주세요
+       switch(div_name)
+       {
+        case '1':
+        document.all.div_01.style.display="";
+        break;
+        case '2':
+        document.all.div_02.style.display="";
+        break;
+        case '3':
+        document.all.div_03.style.display="";
+        break;
+        case '4':
+        document.all.div_04.style.display="";
+        break;
+       }
+      }
+    </script>
+    <style>
+
+    </style>
+  </head>
+
+  <body>
+  Welcome!
+    <!-- 메뉴 탭 만들기 -->
+    <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link active" href="#">Active</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">Link</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">Link</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link disabled" href="#">Disabled</a>
+    </li>
+    </ul>
+    <DIV id=div_01>
+     <table width="707px" cellspacing="0" cellpadding="0" border="0" align="center" style="margin-top: 30px;" >
+      <tr>
+       <td>키워드1</td>
+       <td><a href="javascript:show_layer('2');">키워드2</a></td>
+       <td><a href="javascript:show_layer('3');">키워드3</a></td>
+       <td><a href="javascript:show_layer('4');">키워드4</a></td>    
+      </tr>
+      <tr><td  colspan=4 align=center style='padding-top:20px;'>기사가 잔뜩</td></tr>
+    </table>
+    </DIV>
+    <DIV id=div_02 style="DISPLAY: none">
+     <table width="707px" cellspacing="0" cellpadding="0" border="0" align="center" style="margin-top: 30px;" >
+      <tr>
+       <td><a href="javascript:show_layer('1');">키워드1</a></td>
+       <td>키워드2</td>
+       <td><a href="javascript:show_layer('3');">키워드3</a></td>
+       <td><a href="javascript:show_layer('4');">키워드4</a></td>    
+      </tr>
+      <tr><td  colspan=4 align=center style='padding-top:20px;'>키워드가 들어간 뉴스!</td></tr>
+    </table>
+    </DIV>
+    <DIV id=div_03 style="DISPLAY: none">
+     <table width="707px" cellspacing="0" cellpadding="0" border="0" align="center" style="margin-top: 30px;" >
+      <tr>
+       <td><a href="javascript:show_layer('1');">키워드1</a></td>
+       <td><a href="javascript:show_layer('2');">키워드2</a></td>
+       <td>키워드3</td>
+       <td><a href="javascript:show_layer('4');">키워드4</a></td>    
+      </tr>
+      <tr><td  colspan=4 align=center style='padding-top:20px;'>벤처스퀘어, 플래텀 뉴스</td></tr>
+    </table>
+    </DIV>
+    <DIV id=div_04 style="DISPLAY: none">
+     <table width="707px" cellspacing="0" cellpadding="0" border="0" align="center" style="margin-top: 30px;" >
+      <tr>
+       <td><a href="javascript:show_layer('1');">키워드1</a></td>
+       <td><a href="javascript:show_layer('2');">키워드2</a></td>
+       <td><a href="javascript:show_layer('3');">키워드3</a></td>
+       <td>키워드4</td>    
+      </tr>
+      <tr><td  colspan=4 align=center style='padding-top:20px;'>내용4</td></tr>
+    </table>
+    </DIV>
+  </body>
+</html>
