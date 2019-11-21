@@ -14,7 +14,7 @@ def home():
 
 #플래텀에서 크롤링하기
 @app.route('/platum', methods=['GET'])
-def article_get():
+def get_article_platum():
     keyword = request.args.get('keyword')
     url1 = 'https://platum.kr//?s='
     url2 = url1 + keyword
@@ -41,7 +41,7 @@ def article_get():
                 news_source = '플래텀'
                 news_data = {
                     'title': title.text, 'date' : news_date, 'image' : news_image['src'] ,
-                    'url' : news_url['href'], 'source' : news_source
+                    'url' : news_url['href'], 'source' : news_source , 'keyword' : keyword
                 }
                 #print(news_data)
                 db.platumnews.insert_one(news_data)
@@ -52,7 +52,7 @@ def article_get():
 #keyword 받아서 url 만들기
 
 @app.route('/square', methods=['GET'])
-def article_get():
+def get_article_square():
     url1= 'https://www.venturesquare.net/?s='
     keyword = request.args.get('keyword')
     url2 = url1 + keyword
@@ -75,7 +75,7 @@ def article_get():
             # desc = a.select_one('div > div > div.excerpt > p').text.strip()
             data = {
                 'title': title, 'date': news_date, 'image': news_image['src'],
-                'url': news_url['href'], 'source': news_source
+                'url': news_url['href'], 'source': news_source , 'keyword' : keyword
             }
             #print(data)
             db.squarenews.insert_one(data)
@@ -100,7 +100,7 @@ def article_get():
                 # desc = a.select_one('div > div > div.excerpt > p').text.strip()
                 data = {
                     'title': title, 'date': news_date, 'image': news_image['src'],
-                    'url': news_url['href'], 'source': news_source
+                    'url': news_url['href'], 'source': news_source , 'keyword' : keyword
                 }
                 #print(data)
                 db.squarenews.insert_one(data)
