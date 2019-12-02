@@ -106,5 +106,11 @@ def get_article_square():
                 db.squarenews.insert_one(data)
         return jsonify({'result': 'success'})
 
+@app.route('/post', methods=['POST'])
+def listing():
+    keyword = request.form['keyword_give']
+    news = list(db.squarenews.find({'keyword' : keyword},{'_id':0}))
+    return jsonify({'result':'success', 'news' : news})
+
 if __name__ == '__main__':
    app.run('0.0.0.0',port=5000,debug=True)

@@ -16,96 +16,173 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    
+
     <script>
-
-      function show_layer(div_name){
-       document.all.div_01.style.display="none";
-       document.all.div_02.style.display="none";
-       document.all.div_03.style.display="none";
-       document.all.div_04.style.display="none"; // 메뉴 숫자에 따라 늘려주세요
-       switch(div_name)
-       {
-        case '1':
-        document.all.div_01.style.display="";
-        break;
-        case '2':
-        document.all.div_02.style.display="";
-        break;
-        case '3':
-        document.all.div_03.style.display="";
-        break;
-        case '4':
-        document.all.div_04.style.display="";
-        break;
-       }
+    function make_tabs() {
+      var keyword = $('#posting-keyword').val();
+      if (keyword != ""){
+      let temp_tabname =
+      '<a class="nav-item nav-link" id="nav-'+keyword+'-tab" data-toggle="tab" href=#nav-'+keyword+' role="tab" aria-controls="nav-'+keyword+'" aria-selected="true">'+keyword+'<button  type="button" class="close" aria-label="Close"><span onclick="close_tab()" aria-hidden="true" class="closeicon" >&times;</span></button></a>'
+      $('#nav-tab').append(temp_tabname);
+      let temp_tabcontent =
+      '<div class="tab-pane fade show" id="nav-'+keyword+'" role="tabpanel" aria-labelledby="nav-'+keyword+'-tab"><div class="card-columns"  id="cards-box-'+keyword+'"></div></div>'
+      $('#nav-tabContent').append(temp_tabcontent);
+      posting();
+      } else {
+        alert('키워드를 입력해주세요.')
       }
-    </script>
-    <style>
+    }
+    
+    function posting() {
+      let keyword = $('#posting-keyword').val();
+      $.ajax({
+        type: "GET", 
+        url: "/square?keyword="+keyword, 
+        data: {}, 
+        success: function(response){
+          if (response['result'] == 'success') {
+            alert('크롤링 성공!');
+            listing();
+          } else {
+            alert('서버 오류!')
+          }
+        }
+      })
+    }
+    $(document).ready(function(){
+      $('#cards-box').html('');
+      listing();
+    });
 
+    function listing() {
+      let keyword = $('#posting-keyword').val();
+      $.ajax({
+        type: "POST",
+        url: "/post",
+        data: {keyword_give : keyword},
+        success: function(response){
+           if (response['result'] == 'success') {
+             let news = response['news'];
+             for (let i = 0; i < news.length; i++) {
+               make_card(news[i]['source'],news[i]['date'],news[i]['image'],news[i]['title'],news[i]['url'])
+             }
+           } else {
+             alert('기사를 받아오지 못했습니다');
+           }
+        }
+      })
+    }
+
+    function make_card(source, date, image, title, url) {
+      let keyword = $('#posting-keyword').val();
+      let temp_card = '<div class="card">\
+        <img class="card-img-top" src="'+image+'" alt="Card image cap">\
+        <div class="card-body">\
+          <a href="'+url+'" class="card-title">'+title+'</a>\
+          <p class="card-text">'+date+'</p>\
+          <p class="card-text comment">'+source+'</p>\
+        </div>\
+      </div>';
+      $('#cards-box-'+keyword).append(temp_card);
+    }
+
+
+    function close_tab(){
+      let keyword = $('#posting-keyword').val();
+      $('#nav-'+keyword+'-tab').remove();
+    }
+    //로딩바 만들기
+    $(document).ready(function(){
+  
+    $('#Progress_Loading').hide(); //첫 시작시 로딩바를 숨겨준다.
+    })
+    .ajaxStart(function(){
+      $('#Progress_Loading').show(); //ajax실행시 로딩바를 보여준다.
+    })
+    .ajaxStop(function(){
+      $('#Progress_Loading').hide(); //ajax종료시 로딩바를 숨겨준다.
+    });
+ 
+
+    </script>
+    <style type="text/css">
+    *{
+      font-family: 'Stylish', sans-serif;
+    }
+    .entire_margin {
+      width: 900px;
+      margin: auto;
+    }
+    #Progress_Loading
+    {
+     position: absolute;
+     left: 50%;
+     top: 50%;
+     background: #ffffff;
+    }
+    .closeicon
+    {text-align : center;
+    }
     </style>
   </head>
 
   <body>
-  Welcome!
-    <!-- 메뉴 탭 만들기 -->
-    <ul class="nav nav-tabs">
-    <li class="nav-item">
-      <a class="nav-link active" href="#">Active</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="#">Link</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="#">Link</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link disabled" href="#">Disabled</a>
-    </li>
-    </ul>
-    <DIV id=div_01>
-     <table width="707px" cellspacing="0" cellpadding="0" border="0" align="center" style="margin-top: 30px;" >
-      <tr>
-       <td>키워드1</td>
-       <td><a href="javascript:show_layer('2');">키워드2</a></td>
-       <td><a href="javascript:show_layer('3');">키워드3</a></td>
-       <td><a href="javascript:show_layer('4');">키워드4</a></td>    
-      </tr>
-      <tr><td  colspan=4 align=center style='padding-top:20px;'>기사가 잔뜩</td></tr>
-    </table>
-    </DIV>
-    <DIV id=div_02 style="DISPLAY: none">
-     <table width="707px" cellspacing="0" cellpadding="0" border="0" align="center" style="margin-top: 30px;" >
-      <tr>
-       <td><a href="javascript:show_layer('1');">키워드1</a></td>
-       <td>키워드2</td>
-       <td><a href="javascript:show_layer('3');">키워드3</a></td>
-       <td><a href="javascript:show_layer('4');">키워드4</a></td>    
-      </tr>
-      <tr><td  colspan=4 align=center style='padding-top:20px;'>키워드가 들어간 뉴스!</td></tr>
-    </table>
-    </DIV>
-    <DIV id=div_03 style="DISPLAY: none">
-     <table width="707px" cellspacing="0" cellpadding="0" border="0" align="center" style="margin-top: 30px;" >
-      <tr>
-       <td><a href="javascript:show_layer('1');">키워드1</a></td>
-       <td><a href="javascript:show_layer('2');">키워드2</a></td>
-       <td>키워드3</td>
-       <td><a href="javascript:show_layer('4');">키워드4</a></td>    
-      </tr>
-      <tr><td  colspan=4 align=center style='padding-top:20px;'>벤처스퀘어, 플래텀 뉴스</td></tr>
-    </table>
-    </DIV>
-    <DIV id=div_04 style="DISPLAY: none">
-     <table width="707px" cellspacing="0" cellpadding="0" border="0" align="center" style="margin-top: 30px;" >
-      <tr>
-       <td><a href="javascript:show_layer('1');">키워드1</a></td>
-       <td><a href="javascript:show_layer('2');">키워드2</a></td>
-       <td><a href="javascript:show_layer('3');">키워드3</a></td>
-       <td>키워드4</td>    
-      </tr>
-      <tr><td  colspan=4 align=center style='padding-top:20px;'>내용4</td></tr>
-    </table>
-    </DIV>
+    <!-- 로딩바 -->
+    <div id = "Progress_Loading">
+      <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=http%3A%2F%2Fcfile1.uf.tistory.com%2Fimage%2F9950163C5AFE32810A7310" alt="로딩중" />
+    </div>
+    <!-- 설명부분 -->
+    <div class="entire_margin">
+      <div class="jumbotron">
+        <h1 class="display-4">키워드로 뉴스 뽑아보기!</h1>
+        <p class="lead">키워드만 입력하면 뉴스가 자동으로 저장됩니다.</p>
+        <hr class="my-4">
+        <p class="lead">
+        <!-- 키워드 넣는 인풋 공간 만들기 -->
+          <div class="form-post" id="posting-box">
+            <div>
+              <div class="form-group">
+                <label for="exampleFormControlInput1">키워드 입력</label>
+                <input id="posting-keyword" class="form-control" placeholder="키워드를 입력해주세요.">
+              </div>
+            <span class="form-check">
+              <input type="checkbox" class="form-check-input" id="Check1">
+              <label class="form-check-label" for="Check1" id="venturesquare">벤처스퀘어</label>
+            </span>
+            <span class="form-check">
+              <input type="checkbox" class="form-check-input" id="Check2">
+              <label class="form-check-label" for="Check2" id="platum">플래텀</label>
+                <small id="refercheck" class="form-text text-muted">체크한 페이지만 크롤링 합니다.</small>
+            </span>
+            <button onclick="make_tabs()" class="btn btn-primary">키워드 저장</button>
+            </div>
+          </div>
+        </p>
+      </div>
+      <!-- 키워드 탭 만들기 -->
+      <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+          <a class="nav-item nav-link" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">키워드 1 
+          <button  type="button" class="close" aria-label="Close">
+            <span onclick="close_tab()" aria-hidden="true" class="closeicon" >&times;</span>
+          </button></a>
+        </div>
+      </nav>
+      <!-- 키워드 탭 내용 -->
+      <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+          <div class="card-columns"  id="cards-box">
+              <div class="card">
+                <img class="card-img-top" src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg" alt="Card image cap">
+                <div class="card-body">
+                  <a href="#" class="card-title">기사제목</a>
+                  <p class="card-text">출처,날짜</p>
+                  <p class="card-text comment">코멘트는 고민해봅시다.</p>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
