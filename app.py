@@ -78,7 +78,13 @@ def get_article_square():
                 'url': news_url['href'], 'source': news_source , 'keyword' : keyword
             }
             #print(data)
-            db.squarenews.insert_one(data)
+            #print(data['url'])
+            original = db.squarenews.find_one({'keyword': keyword ,'url': news_url['href']},{'_id':0} )
+            if original == None :
+                #print(data)
+                #print(original)
+                db.squarenews.insert_one(data)
+
         return jsonify({'result': 'success'})
     else :
         for i in range(int(page_list[page_length-2].text)):
@@ -103,7 +109,9 @@ def get_article_square():
                     'url': news_url['href'], 'source': news_source , 'keyword' : keyword
                 }
                 #print(data)
-                db.squarenews.insert_one(data)
+                original = db.squarenews.find_one({'keyword': keyword, 'url': news_url['href']}, {'_id': 0})
+                if original == None:
+                    db.squarenews.insert_one(data)
         return jsonify({'result': 'success'})
 
 @app.route('/post', methods=['POST'])

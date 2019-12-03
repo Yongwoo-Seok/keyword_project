@@ -22,7 +22,7 @@
       var keyword = $('#posting-keyword').val();
       if (keyword != ""){
       let temp_tabname =
-      '<a class="nav-item nav-link" id="nav-'+keyword+'-tab" data-toggle="tab" href=#nav-'+keyword+' role="tab" aria-controls="nav-'+keyword+'" aria-selected="true">'+keyword+'<button  type="button" class="close" aria-label="Close"><span onclick="close_tab()" aria-hidden="true" class="closeicon" >&times;</span></button></a>'
+      '<a class="nav-item nav-link" id="nav-'+keyword+'-tab" data-toggle="tab" href=#nav-'+keyword+' role="tab" aria-controls="nav-'+keyword+'" aria-selected="true">'+keyword+'<button  type="button" class="close" aria-label="Close"><span onclick="close_tab(\''+keyword+'\')" aria-hidden="true" class="closeicon" >&times;</span></button></a>'
       $('#nav-tab').append(temp_tabname);
       let temp_tabcontent =
       '<div class="tab-pane fade show" id="nav-'+keyword+'" role="tabpanel" aria-labelledby="nav-'+keyword+'-tab"><div class="card-columns"  id="cards-box-'+keyword+'"></div></div>'
@@ -84,12 +84,13 @@
         </div>\
       </div>';
       $('#cards-box-'+keyword).append(temp_card);
+      $('#cards-box').append(temp_card);
     }
 
 
-    function close_tab(){
-      let keyword = $('#posting-keyword').val();
+    function close_tab(keyword){
       $('#nav-'+keyword+'-tab').remove();
+      $('#nav-'+keyword).remove();
     }
     //로딩바 만들기
     $(document).ready(function(){
@@ -162,7 +163,7 @@
       <!-- 키워드 탭 만들기 -->
       <nav>
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
-          <a class="nav-item nav-link" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">키워드 1 
+          <a class="nav-item nav-link" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">전체보기
           <button  type="button" class="close" aria-label="Close">
             <span onclick="close_tab()" aria-hidden="true" class="closeicon" >&times;</span>
           </button></a>
@@ -172,14 +173,6 @@
       <div class="tab-content" id="nav-tabContent">
         <div class="tab-pane fade show" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
           <div class="card-columns"  id="cards-box">
-              <div class="card">
-                <img class="card-img-top" src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg" alt="Card image cap">
-                <div class="card-body">
-                  <a href="#" class="card-title">기사제목</a>
-                  <p class="card-text">출처,날짜</p>
-                  <p class="card-text comment">코멘트는 고민해봅시다.</p>
-                </div>
-              </div>
           </div>
         </div>
       </div>
