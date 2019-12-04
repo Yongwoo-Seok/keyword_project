@@ -44,7 +44,9 @@ def get_article_platum():
                     'url' : news_url['href'], 'source' : news_source , 'keyword' : keyword
                 }
                 #print(news_data)
-                db.platumnews.insert_one(news_data)
+                original = db.news.find_one({'keyword': keyword, 'url': news_url['href']}, {'_id': 0})
+                if original == None:
+                    db.news.insert_one(news_data)
         Page += 1
     return jsonify({'result': 'success'})
 
@@ -79,11 +81,11 @@ def get_article_square():
             }
             #print(data)
             #print(data['url'])
-            original = db.squarenews.find_one({'keyword': keyword ,'url': news_url['href']},{'_id':0} )
+            original = db.news.find_one({'keyword': keyword ,'url': news_url['href']},{'_id':0} )
             if original == None :
                 #print(data)
                 #print(original)
-                db.squarenews.insert_one(data)
+                db.news.insert_one(data)
 
         return jsonify({'result': 'success'})
     else :
@@ -109,15 +111,16 @@ def get_article_square():
                     'url': news_url['href'], 'source': news_source , 'keyword' : keyword
                 }
                 #print(data)
-                original = db.squarenews.find_one({'keyword': keyword, 'url': news_url['href']}, {'_id': 0})
+                original = db.news.find_one({'keyword': keyword, 'url': news_url['href']}, {'_id': 0})
                 if original == None:
-                    db.squarenews.insert_one(data)
+                    db.news.insert_one(data)
         return jsonify({'result': 'success'})
 
 @app.route('/post', methods=['POST'])
 def listing():
     keyword = request.form['keyword_give']
-    news = list(db.squarenews.find({'keyword' : keyword},{'_id':0}))
+    source = request.form['source_give']
+    news = list(db.news.find({'keyword' : keyword, 'source' : source},{'_id':0}))
     return jsonify({'result':'success', 'news' : news})
 
 if __name__ == '__main__':

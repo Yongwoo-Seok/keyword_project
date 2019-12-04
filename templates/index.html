@@ -20,6 +20,8 @@
     <script>
     function make_tabs() {
       var keyword = $('#posting-keyword').val();
+      var square_check = $("input:checkbox[name=venturesquare]").is(":checked")
+      var platum_check = $("input:checkbox[name=platum]").is(":checked")
       if (keyword != ""){
       let temp_tabname =
       '<a class="nav-item nav-link" id="nav-'+keyword+'-tab" data-toggle="tab" href=#nav-'+keyword+' role="tab" aria-controls="nav-'+keyword+'" aria-selected="true">'+keyword+'<button  type="button" class="close" aria-label="Close"><span onclick="close_tab(\''+keyword+'\')" aria-hidden="true" class="closeicon" >&times;</span></button></a>'
@@ -27,22 +29,34 @@
       let temp_tabcontent =
       '<div class="tab-pane fade show" id="nav-'+keyword+'" role="tabpanel" aria-labelledby="nav-'+keyword+'-tab"><div class="card-columns"  id="cards-box-'+keyword+'"></div></div>'
       $('#nav-tabContent').append(temp_tabcontent);
-      posting();
+        if (square_check == true && platum_check == false){
+            square_posting();
+        } else if (square_check == false && platum_check == true){
+            platum_posting();
+        } else if (square_check == true && platum_check == true){
+            square_positng();
+            platum_posting();
+        } else if (square_check == false && platum_check == false){
+          alert('크롤링할 홈페이지를 체크해주세요.')
+        }
+
       } else {
         alert('키워드를 입력해주세요.')
       }
     }
     
-    function posting() {
+
+
+    function platum_posting() {
       let keyword = $('#posting-keyword').val();
       $.ajax({
         type: "GET", 
-        url: "/square?keyword="+keyword, 
+        url: "/platum?keyword="+keyword, 
         data: {}, 
         success: function(response){
           if (response['result'] == 'success') {
-            alert('크롤링 성공!');
-            listing();
+            alert(' 플래텀 크롤링 성공!');
+            platum_listing();
           } else {
             alert('서버 오류!')
           }
@@ -51,15 +65,57 @@
     }
     $(document).ready(function(){
       $('#cards-box').html('');
-      listing();
+      platum_listing();
     });
 
-    function listing() {
+    function platum_listing() {
       let keyword = $('#posting-keyword').val();
+      var source = $("input:checkbox[name='platum']:checked").val()
       $.ajax({
         type: "POST",
         url: "/post",
-        data: {keyword_give : keyword},
+        data: {keyword_give : keyword , source_give : source},
+        success: function(response){
+           if (response['result'] == 'success') {
+             let news = response['news'];
+             for (let i = 0; i < news.length; i++) {
+               make_card(news[i]['source'],news[i]['date'],news[i]['image'],news[i]['title'],news[i]['url'])
+             }
+           } else {
+             alert('기사를 받아오지 못했습니다');
+           }
+        }
+      })
+    }
+
+    function square_posting() {
+      let keyword = $('#posting-keyword').val();
+      $.ajax({
+        type: "GET", 
+        url: "/square?keyword="+keyword, 
+        data: {}, 
+        success: function(response){
+          if (response['result'] == 'success') {
+            alert('벤처스퀘어 크롤링 성공!');
+            square_listing();
+          } else {
+            alert('서버 오류!')
+          }
+        }
+      })
+    }
+    $(document).ready(function(){
+      $('#cards-box').html('');
+      square_listing();
+    });
+
+    function square_listing() {
+      let keyword = $('#posting-keyword').val();
+      var source = $("input:checkbox[name='venturesquare']:checked").val()
+      $.ajax({
+        type: "POST",
+        url: "/post",
+        data: {keyword_give : keyword , source_give : source},
         success: function(response){
            if (response['result'] == 'success') {
              let news = response['news'];
@@ -147,12 +203,10 @@
                 <input id="posting-keyword" class="form-control" placeholder="키워드를 입력해주세요.">
               </div>
             <span class="form-check">
-              <input type="checkbox" class="form-check-input" id="Check1">
-              <label class="form-check-label" for="Check1" id="venturesquare">벤처스퀘어</label>
+              <input type="checkbox" class="form-check-input" name="venturesquare" value="벤처스퀘어">벤처스퀘어
             </span>
             <span class="form-check">
-              <input type="checkbox" class="form-check-input" id="Check2">
-              <label class="form-check-label" for="Check2" id="platum">플래텀</label>
+              <input type="checkbox" class="form-check-input" name="platum" value="플래텀">플래텀
                 <small id="refercheck" class="form-text text-muted">체크한 페이지만 크롤링 합니다.</small>
             </span>
             <button onclick="make_tabs()" class="btn btn-primary">키워드 저장</button>
