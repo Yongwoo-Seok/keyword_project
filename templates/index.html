@@ -29,15 +29,15 @@
       let temp_tabcontent =
       '<div class="tab-pane fade show" id="nav-'+keyword+'" role="tabpanel" aria-labelledby="nav-'+keyword+'-tab"><div class="card-columns"  id="cards-box-'+keyword+'"></div></div>'
       $('#nav-tabContent').append(temp_tabcontent);
-        if (square_check == true && platum_check == false){
-            square_posting();
-        } else if (square_check == false && platum_check == true){
-            platum_posting();
-        } else if (square_check == true && platum_check == true){
-            square_positng();
-            platum_posting();
-        } else if (square_check == false && platum_check == false){
+        if (square_check == true){
+          square_posting();
+        } 
+        if (platum_check == true){
+          platum_posting();
+        } 
+        if (square_check == false && platum_check == false){
           alert('크롤링할 홈페이지를 체크해주세요.')
+          close_tab(keyword);
         }
 
       } else {
